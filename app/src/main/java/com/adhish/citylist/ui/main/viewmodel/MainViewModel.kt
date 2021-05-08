@@ -12,15 +12,10 @@ import io.reactivex.schedulers.Schedulers
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
-    private var name = ""
     private val cities = MutableLiveData<Resource<List<GeoNames>>>()
     private val compositeDisposable = CompositeDisposable()
 
-    init {
-        fetchCities(name)
-    }
-
-    private fun fetchCities(name: String) {
+    fun fetchCities(name: String) {
         cities.postValue(Resource.loading(null))
         compositeDisposable.add(
             mainRepository.getCountries(name)
@@ -39,8 +34,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getCountries(name: String): LiveData<Resource<List<GeoNames>>> {
-        this.name = name
+    fun getCountries(): LiveData<Resource<List<GeoNames>>> {
         return cities
     }
 }

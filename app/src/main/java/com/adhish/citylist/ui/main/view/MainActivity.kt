@@ -27,10 +27,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupUI()
         setupViewModel()
-
         search.setOnClickListener {
             if (enterCity.text.toString().isNotEmpty()) {
-                setupObserver(enterCity.text.toString())
+                setupObserver()
+                mainViewModel.fetchCities(enterCity.text.toString())
             } else {
                 Toast.makeText(this, "Enter city name to search", Toast.LENGTH_LONG).show()
             }
@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
+        progressBar.visibility = View.GONE
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = MainAdapter(arrayListOf())
         recyclerView.addItemDecoration(
@@ -49,8 +50,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    private fun setupObserver(name: String) {
-        mainViewModel.getCountries(name).observe(this, {
+    private fun setupObserver() {
+        mainViewModel.getCountries().observe(this, {
             when (it.status) {
                 Status.SUCCESS -> {
                     progressBar.visibility = View.GONE

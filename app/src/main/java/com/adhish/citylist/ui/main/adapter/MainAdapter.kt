@@ -14,7 +14,6 @@ class MainAdapter(
 
     class DataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(geoNames: GeoNames) {
-            // TODO show data here
             itemView.name.text = geoNames.name
             itemView.adminName.text = geoNames.adminName1
             itemView.countryName.text = geoNames.countryName
@@ -35,6 +34,7 @@ class MainAdapter(
         holder.bind(geoNames[position])
 
     fun addData(list: List<GeoNames>) {
+        geoNames.clear()
         geoNames.addAll(list)
     }
 
