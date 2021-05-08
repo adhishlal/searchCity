@@ -3,7 +3,6 @@ package com.adhish.citylist.ui.main.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.adhish.citylist.data.model.CountryResponse
 import com.adhish.citylist.data.model.GeoNames
 import com.adhish.citylist.data.repository.MainRepository
 import com.adhish.citylist.utils.Resource
@@ -13,11 +12,12 @@ import io.reactivex.schedulers.Schedulers
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
+    private var name = ""
     private val cities = MutableLiveData<Resource<List<GeoNames>>>()
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        fetchCities("san")
+        fetchCities(name)
     }
 
     private fun fetchCities(name: String) {
@@ -26,10 +26,10 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
             mainRepository.getCountries(name)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ geoNames ->
-                    cities.postValue(Resource.success(geoNames))
+                .subscribe({ countries ->
+                    cities.postValue(Resource.success(countries.geonames))
                 }, {
-                    cities.postValue(Resource.error("Something Went Wrong", null))
+                    cities.postValue(Resource.error(it.localizedMessage, null))
                 })
         )
     }
@@ -39,7 +39,8 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getCountries(): LiveData<Resource<List<GeoNames>>> {
+    fun getCountries(name: String): LiveData<Resource<List<GeoNames>>> {
+        this.name = name
         return cities
     }
 }

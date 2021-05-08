@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.adhish.citylist.R
 import com.adhish.citylist.data.api.ApiHelper
 import com.adhish.citylist.data.api.ApiServiceImpl
-import com.adhish.citylist.data.model.CountryResponse
 import com.adhish.citylist.data.model.GeoNames
 import com.adhish.citylist.ui.base.ViewModelFactory
 import com.adhish.citylist.ui.main.adapter.MainAdapter
@@ -28,7 +27,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupUI()
         setupViewModel()
-        setupObserver()
+
+        search.setOnClickListener {
+            if (enterCity.text.toString().isNotEmpty()) {
+                setupObserver(enterCity.text.toString())
+            } else {
+                Toast.makeText(this, "Enter city name to search", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun setupUI() {
@@ -43,8 +49,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    private fun setupObserver() {
-        mainViewModel.getCountries().observe(this, {
+    private fun setupObserver(name: String) {
+        mainViewModel.getCountries(name).observe(this, {
             when (it.status) {
                 Status.SUCCESS -> {
                     progressBar.visibility = View.GONE

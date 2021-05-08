@@ -10,7 +10,7 @@ class ApiServiceImpl {
         val retrofit = Retrofit.Builder()
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://secure.geonames.org/searchJSON?")
+            .baseUrl("https://secure.geonames.org/")
             .build()
 
         return retrofit.create(ApiService::class.java);
